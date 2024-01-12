@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import RegisterModal from './RegisterModal';
 import LoginModal from './LoginModal';
+import AddBalanceModal from './AddBalanceModal';  // Yeni ekledik
 
-import { registerUser } from '../Functions/userFunctions';
+import { registerUser, addBalance } from '../Functions/userFunctions';
 
 const Header = () => {
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isAddBalanceModalOpen, setIsAddBalanceModalOpen] = useState(false);  // Yeni ekledik
   const [user, setUser] = useState(null);
 
   const openRegisterModal = () => {
@@ -23,6 +25,14 @@ const Header = () => {
 
   const closeLoginModal = () => {
     setIsLoginModalOpen(false);
+  };
+
+  const openAddBalanceModal = () => {
+    setIsAddBalanceModalOpen(true);
+  };
+
+  const closeAddBalanceModal = () => {
+    setIsAddBalanceModalOpen(false);
   };
 
   const handleRegister = async (userData) => {
@@ -62,6 +72,20 @@ const Header = () => {
     setUser(null);
   };
 
+  const handleAddBalance = (amount) => {
+    // Bakiye ekleme işlemi burada yapılabilir
+    console.log(`Adding ${amount} to user's balance`);
+
+    // Yeni bakiyeyi set et
+    setUser((prevUser) => ({
+      ...prevUser,
+      balance: prevUser.balance + amount,
+    }));
+
+    // Bakiye ekleme işlemi tamamlandıktan sonra modal'ı kapat
+    closeAddBalanceModal();
+  };
+
   return (
     <header className="bg-blue-500 p-4 flex justify-between items-center">
       <div>
@@ -72,6 +96,7 @@ const Header = () => {
           <>
             <p>{user.name}</p>
             <p>Bakiye: ${user.balance}</p>
+            <button onClick={openAddBalanceModal}>Bakiye Ekle</button>  {/* Yeni ekledik */}
             <button onClick={handleLogout}>Çıkış Yap</button>
           </>
         ) : (
@@ -84,6 +109,7 @@ const Header = () => {
 
       {isRegisterModalOpen && <RegisterModal onClose={closeRegisterModal} onRegister={handleRegister} />}
       {isLoginModalOpen && <LoginModal onClose={closeLoginModal} onLogin={handleLogin} />}
+      {isAddBalanceModalOpen && <AddBalanceModal onClose={closeAddBalanceModal} onAddBalance={handleAddBalance} />}  {/* Yeni ekledik */}
     </header>
   );
 };
