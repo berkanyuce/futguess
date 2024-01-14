@@ -1,15 +1,29 @@
-import React, { useState } from 'react';
-import RegisterModal from './RegisterModal';
-import LoginModal from './LoginModal';
-import AddBalanceModal from './AddBalanceModal';  // Yeni ekledik
+// Header.js
 
-import { registerUser, addBalance } from '../Functions/userFunctions';
+import React, { useState, useEffect } from 'react';
+import RegisterModal from '../Modals/RegisterModal';
+import LoginModal from '../Modals/LoginModal';
+import AddBalanceModal from '../Modals/AddBalanceModal';
+import { registerUser, getUserById, getLoggedInUser } from '../Functions/userFunctions';
 
 const Header = () => {
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-  const [isAddBalanceModalOpen, setIsAddBalanceModalOpen] = useState(false);  // Yeni ekledik
+  const [isAddBalanceModalOpen, setIsAddBalanceModalOpen] = useState(false);
   const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    // Sayfa yüklendiğinde ve kullanıcı giriş yaptığında user state'ini güncelle
+    const loggedInUser = getLoggedInUser();
+
+    if (loggedInUser) {
+      const user = getUserById(loggedInUser.id);
+
+      if (user) {
+        setUser(user);
+      }
+    }
+  }, []);
 
   const openRegisterModal = () => {
     setIsRegisterModalOpen(true);
@@ -36,53 +50,46 @@ const Header = () => {
   };
 
   const handleRegister = async (userData) => {
-    // Kullanıcıyı kaydet
     const newUser = await registerUser(userData.username, userData.email, userData.password);
-  
-    // Yeni kullanıcı bilgilerini set et
+
     setUser({
       name: newUser.username,
       balance: 0,
     });
-  
-    // Kayıt işlemi tamamlandıktan sonra modal'ı kapat
+
     closeRegisterModal();
   };
-  
 
   const handleLogin = (userData) => {
-    // Giriş işlemi burada yapılabilir
     console.log('Logging in user:', userData);
+    const loggedInUser = getLoggedInUser();
 
-    // Kullanıcı bilgilerini set et
-    setUser({
-      name: userData.username,
-      balance: 0,
-    });
+    if (loggedInUser) {
+      const user = getUserById(loggedInUser.id);
 
-    // Giriş işlemi tamamlandıktan sonra modal'ı kapat
+      if (user) {
+        setUser(user);
+      }
+    }
+
     closeLoginModal();
   };
 
   const handleLogout = () => {
-    // Çıkış işlemi burada yapılabilir
     console.log('Logging out user');
-
-    // Kullanıcı bilgilerini sıfırla
+    
+    localStorage.removeItem('loggedInUser');
     setUser(null);
   };
 
   const handleAddBalance = (amount) => {
-    // Bakiye ekleme işlemi burada yapılabilir
     console.log(`Adding ${amount} to user's balance`);
 
-    // Yeni bakiyeyi set et
     setUser((prevUser) => ({
       ...prevUser,
       balance: prevUser.balance + amount,
     }));
 
-    // Bakiye ekleme işlemi tamamlandıktan sonra modal'ı kapat
     closeAddBalanceModal();
   };
 
@@ -94,9 +101,9 @@ const Header = () => {
       <div className="text-white flex items-center space-x-4">
         {user ? (
           <>
-            <p>{user.name}</p>
+            <p>{user.username}</p>
             <p>Bakiye: ${user.balance}</p>
-            <button onClick={openAddBalanceModal}>Bakiye Ekle</button>  {/* Yeni ekledik */}
+            <button onClick={openAddBalanceModal}>Bakiye Ekle</button>
             <button onClick={handleLogout}>Çıkış Yap</button>
           </>
         ) : (
@@ -109,7 +116,7 @@ const Header = () => {
 
       {isRegisterModalOpen && <RegisterModal onClose={closeRegisterModal} onRegister={handleRegister} />}
       {isLoginModalOpen && <LoginModal onClose={closeLoginModal} onLogin={handleLogin} />}
-      {isAddBalanceModalOpen && <AddBalanceModal onClose={closeAddBalanceModal} onAddBalance={handleAddBalance} />}  {/* Yeni ekledik */}
+      {isAddBalanceModalOpen && <AddBalanceModal onClose={closeAddBalanceModal} onAddBalance={handleAddBalance} />}
     </header>
   );
 };

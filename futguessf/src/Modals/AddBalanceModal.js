@@ -1,18 +1,32 @@
 import React, { useState } from 'react';
+import { setUsersToLocalStorage, getUsersFromLocalStorage } from '../Functions/userFunctions';
 
 const AddBalanceModal = ({ onClose, onAddBalance }) => {
   const [amount, setAmount] = useState('');
 
   const handleAddBalance = () => {
-    // Bakiye ekleme işlemini gerçekleştir
     const parsedAmount = parseFloat(amount);
 
     if (!isNaN(parsedAmount) && parsedAmount > 0) {
-      // Girilen miktar geçerli bir sayı ise ve 0'dan büyükse
-      onAddBalance(parsedAmount);
+      const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
 
-      // Bakiye ekleme işlemi tamamlandıktan sonra modal'ı kapat
-      onClose();
+      if (loggedInUser) {
+        const userId = loggedInUser.id;
+        const users = getUsersFromLocalStorage();
+        const storedUserIndex = users.findIndex((u) => u.id === userId);
+
+        if (storedUserIndex !== -1) {
+          users[storedUserIndex].balance += parsedAmount;
+          setUsersToLocalStorage(users);
+
+          onClose();
+          onAddBalance(parsedAmount);
+        } else {
+          alert('Oturum açan kullanıcı bulunamadı.');
+        }
+      } else {
+        alert('Oturum açan kullanıcı bulunamadı.');
+      }
     } else {
       alert('Geçerli bir miktar giriniz.');
     }

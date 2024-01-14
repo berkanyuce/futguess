@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
+import { setLoggedInUser } from '../Functions/userFunctions';
 
 const LoginModal = ({ onClose, onLogin }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const handleLogin = () => {
-    // Kullanıcı girişini kontrol et
-    // Burada genellikle backend ile iletişim kurulur, ancak bu örnekte localStorage kullanılacak
     const users = JSON.parse(localStorage.getItem('users')) || [];
     const user = users.find(u => u.email === email && u.password === password);
-
+  
     if (user) {
       // Başarılı giriş
+      setLoggedInUser(user); // Bu satırı ekleyin
       onLogin(user);
       onClose();
     } else {
@@ -19,6 +19,7 @@ const LoginModal = ({ onClose, onLogin }) => {
       alert('Hatalı kullanıcı adı veya şifre. Tekrar deneyin.');
     }
   };
+  
 
   return (
     <div className="fixed inset-0 overflow-y-auto flex items-center justify-center z-50">

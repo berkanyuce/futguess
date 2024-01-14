@@ -1,16 +1,30 @@
 import './App.css';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import matchData from './Data/MatchData'; // JSON verinizi içeriye eklediğiniz dosyanın doğru yolunu belirtin
 
 import Header from './Components/Header';
 import MatchMenu from './Components/MatchMenu';
 import Footer from './Components/Footer';
-import RegisterModal from './Components/RegisterModal';
+import RegisterModal from './Modals/RegisterModal';
+import { getLoggedInUser, getUserById } from './Functions/userFunctions';
 
-
-function App() {
+const App = () => {
   const [selectedDay, setSelectedDay] = useState('Matchday 1');
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
+  const [user, setUser] = useState(null);
+  const [predictionMade, setPredictionMade] = useState(false);
+
+  useEffect(() => {
+    const loggedInUser = getLoggedInUser();
+
+    if (loggedInUser) {
+      const user = getUserById(loggedInUser.id);
+
+      if (user) {
+        setUser(user);
+      }
+    }
+  }, [user, predictionMade]);
 
   const openRegisterModal = () => {
     setIsRegisterModalOpen(true);
@@ -22,6 +36,10 @@ function App() {
 
   const handleDaySelect = (day) => {
     setSelectedDay(day);
+  };
+
+  const handlePredictionMade = () => {
+    setPredictionMade(true);
   };
 
   return (
@@ -49,14 +67,12 @@ function App() {
               ))}
           </div>
         </div>
-        <MatchMenu matches={matchData.matches.filter((match) => match.round === selectedDay)} />
-        {/* Diğer bileşenleri ekleyebilirsiniz */}
+        <MatchMenu matches={matchData.matches.filter((match) => match.round === selectedDay)} onPredictionMade={handlePredictionMade} />
         <Footer />
-
         {isRegisterModalOpen && <RegisterModal onClose={closeRegisterModal} />}
       </div>
     </>
   );
-}
+};
 
 export default App;
