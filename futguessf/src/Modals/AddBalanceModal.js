@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { setUsersToLocalStorage, getUsersFromLocalStorage } from '../Functions/userFunctions';
+import { setUsersToLocalStorage, getUsersFromLocalStorage, setLoggedInUser } from '../Functions/userFunctions';
 
 const AddBalanceModal = ({ onClose, onAddBalance }) => {
   const [amount, setAmount] = useState('');
@@ -17,8 +17,9 @@ const AddBalanceModal = ({ onClose, onAddBalance }) => {
 
         if (storedUserIndex !== -1) {
           users[storedUserIndex].balance += parsedAmount;
+          loggedInUser.balance += parsedAmount;
           setUsersToLocalStorage(users);
-
+          setLoggedInUser(loggedInUser);
           onClose();
           onAddBalance(parsedAmount);
         } else {

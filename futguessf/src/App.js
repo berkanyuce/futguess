@@ -1,6 +1,6 @@
 import './App.css';
 import React, { useState, useEffect } from 'react';
-import matchData from './Data/MatchData'; // JSON verinizi içeriye eklediğiniz dosyanın doğru yolunu belirtin
+import matchData from './Data/MatchData'; 
 
 import Header from './Components/Header';
 import MatchMenu from './Components/MatchMenu';
@@ -24,7 +24,7 @@ const App = () => {
         setUser(user);
       }
     }
-  }, [user, predictionMade]);
+  }, [user]);
 
   const openRegisterModal = () => {
     setIsRegisterModalOpen(true);

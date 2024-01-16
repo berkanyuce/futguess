@@ -10,12 +10,10 @@ const LoginModal = ({ onClose, onLogin }) => {
     const user = users.find(u => u.email === email && u.password === password);
   
     if (user) {
-      // Başarılı giriş
-      setLoggedInUser(user); // Bu satırı ekleyin
+      setLoggedInUser(user); 
       onLogin(user);
       onClose();
     } else {
-      // Hatalı giriş
       alert('Hatalı kullanıcı adı veya şifre. Tekrar deneyin.');
     }
   };

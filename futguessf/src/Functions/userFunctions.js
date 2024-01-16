@@ -1,4 +1,3 @@
-// userFunctions.js
 
 const registerUser = (username, email, password) => {
     const users = getUsersFromLocalStorage();
@@ -12,7 +11,7 @@ const registerUser = (username, email, password) => {
     };
     users.push(newUser);
     setUsersToLocalStorage(users);
-    setLoggedInUser(newUser); // Kullanıcıyı otomatik olarak giriş yapmış say
+    setLoggedInUser(newUser);
     return newUser;
   };
   
@@ -21,7 +20,7 @@ const registerUser = (username, email, password) => {
     const user = users.find((u) => u.email === email && u.password === password);
   
     if (user) {
-      setLoggedInUser(user); // Bu satırı ekleyin
+      setLoggedInUser(user); 
     }
   
     return user;
@@ -37,7 +36,6 @@ const registerUser = (username, email, password) => {
     const usersString = localStorage.getItem('users');
     const users = usersString ? JSON.parse(usersString) : [];
   
-    // Eğer users bir dizi değilse, bir dizi olarak başlat
     if (!Array.isArray(users)) {
       return [];
     }
@@ -71,9 +69,7 @@ const registerUser = (username, email, password) => {
       user.id === userId ? { ...user, balance: newBalance } : user
     );
   
-    // LocalStorage'deki veriyi güncelle
     setUsersToLocalStorage(updatedUsers);
-    // Aynı zamanda loggedInUser'ın bakiyesini de güncelle
     setLoggedInUser({ ...getLoggedInUser(), balance: newBalance });
   };
 

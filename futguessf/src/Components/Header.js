@@ -1,4 +1,3 @@
-// Header.js
 
 import React, { useState, useEffect } from 'react';
 import RegisterModal from '../Modals/RegisterModal';
@@ -13,7 +12,6 @@ const Header = () => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    // Sayfa yüklendiğinde ve kullanıcı giriş yaptığında user state'ini güncelle
     const loggedInUser = getLoggedInUser();
 
     if (loggedInUser) {

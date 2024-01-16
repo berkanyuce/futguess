@@ -1,4 +1,3 @@
-// MatchMenu.js
 import React, { useState } from 'react';
 import { updateUserBalance, getLoggedInUser } from '../Functions/userFunctions';
 
@@ -19,11 +18,8 @@ const MatchMenu = ({ matches, onPredictionMade }) => {
 
   const handlePrediction = () => {
     if (selectedMatch) {
-      // Tahmin et butonuna tıklandığında kullanıcının bakiyesini 1 azalt
       updateUserBalance(user.id, user.balance - 1);
-      // Ana bileşende tahminin üretildiği bilgisini işle
       onPredictionMade();
-      // Modal'ı kapat
       closeModal();
     }
   };
@@ -64,7 +60,6 @@ const MatchMenu = ({ matches, onPredictionMade }) => {
               <div>
                 <p>Maç: {selectedMatch.team1} vs {selectedMatch.team2}</p>
                 <p>Tarih: {selectedMatch.date}</p>
-                {/* Diğer maç bilgilerini burada göstermek istediğiniz şekilde ekleyebilirsiniz */}
               </div>
             )}
             <button

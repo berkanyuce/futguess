@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { registerUser } from '../Functions/userFunctions'; // userFunctions.js dosyasını import et
+import { registerUser } from '../Functions/userFunctions'; 
 
 const RegisterModal = ({ onClose, onRegister }) => {
   const [username, setUsername] = useState('');
@@ -7,7 +7,6 @@ const RegisterModal = ({ onClose, onRegister }) => {
   const [password, setPassword] = useState('');
 
   const handleRegister = () => {
-    // Kullanıcı bilgilerini al
     const newUser = {
       username,
       email,
@@ -16,32 +15,24 @@ const RegisterModal = ({ onClose, onRegister }) => {
       isAdmin: false,
     };
   
-    // Eski kullanıcıları getir
     const existingUsersJSON = localStorage.getItem('users');
     const existingUsers = existingUsersJSON ? JSON.parse(existingUsersJSON) : { users: [] };
   
-    // Ensure that the 'users' property exists
     if (!existingUsers.users) {
       existingUsers.users = [];
     }
   
-    // Kullanıcının zaten var olup olmadığını kontrol et
     const isUserExist = existingUsers.users.some(u => u.email === newUser.email);
   
     if (!isUserExist) {
-      // Kullanıcıyı ekle
       existingUsers.users.push(newUser);
   
-      // Güncellenmiş kullanıcı listesini local storage'a kaydet
       localStorage.setItem('users', JSON.stringify(existingUsers));
   
-      // Kayıt işlemi tamamlandıktan sonra modal'ı kapat
       onClose();
   
-      // Kayıt olan kullanıcıyı ana bileşene iletebilirsiniz
       onRegister(newUser);
     } else {
-      // Kullanıcı zaten varsa uygun bir işlem yapabilirsiniz
       alert('Bu e-posta ile kayıtlı bir kullanıcı zaten var.');
     }
   };
